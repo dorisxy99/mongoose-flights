@@ -1,0 +1,90 @@
+<%- include('../partials/header') %>
+
+<h1>Showing flight #<%= flight.flightNo %>....</h1>
+
+<p><strong>Airline:</strong> <%= flight.airline %></p>
+<p><strong>Departs from:</strong> <%= flight.airport %></p>
+<p><strong>At:</strong> <%= flight.departs %></p>
+
+<section id="flight-details">
+
+  <section id="destns">
+    <h2>Destinations</h2>
+    <% if (flight.destinations.length) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Airport</th>
+            <th>Arrives at</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% flight.destinations.forEach(function(dest) { %>
+            <tr>
+              <td>
+                <%= dest.airport %> 
+              </td>
+              
+              <td>
+                <%= dest.arrival.toLocaleString() %>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+      <% } else { %>
+        <p>No Destinations Yet</p>
+        <% } %>
+
+          <form id="add-dest" method="POST" action="/flights/<%= flight._id %>/destinations">
+            <label>Destination:
+              <select name="airport">
+                <option disabled selected value></option>
+                <option <%= destns.includes('AUS') ? "disabled" : "" %> value="AUS">AUS</option>
+                <option <%= destns.includes('DFW') ? "disabled" : "" %> value="DFW">DFW</option>
+                <option <%= destns.includes('DEN') ? "disabled" : "" %> value="DEN">DEN</option>
+                <option <%= destns.includes('LAX') ? "disabled" : "" %> value="LAX">LAX</option>
+                <option <%= destns.includes('SAN') ? "disabled" : "" %> value="SAN">SAN</option>
+              </select>
+            </label><br>
+            <label>Arrival:
+              <input type="datetime-local" name="arrival">
+            </label><br>
+            <input type="submit" value="Add" class="button">
+          </form>
+  </section>
+
+  <section id="tickets">
+    <h2>Tickets</h2>
+    <% if (tickets.length) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Seat</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach(function(ticket) { %>
+        <tr>
+          <td><%= ticket.seat %></td>
+          <td><%= ticket.price %></td>
+          <td>
+            <form action="/tickets/<%= ticket._id %>?_method=DELETE" method="POST">
+              <button type="submit" class="delete">X</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } else { %>
+      <p>No Tickets Yet</p>
+    <% } %>
+
+    <a href="/flights/<%= flight.id %>/tickets/new" class="button">New Ticket</a>
+  </section>
+
+</section>
+
+<%- include('../partials/footer') %>
